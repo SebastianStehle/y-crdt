@@ -2503,7 +2503,7 @@ impl YInput {
             } else if tag == Y_DOC {
                 Any::Undefined
             } else {
-                panic!("Unrecognized YVal value tag.")
+                panic!("Unrecognized YVal value tag, got <{}>", tag)
             }
         }
     }
