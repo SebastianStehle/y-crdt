@@ -87,6 +87,9 @@ pub const Y_TRUE: u8 = 1;
 /// Flag used to mark a falsy boolean numbers.
 pub const Y_FALSE: u8 = 0;
 
+/// Flag used to mark a error boolean numbers.
+pub const Y_ERROR: u8 = 2;
+
 /// Flag used by `YOptions` to determine, that text operations offsets and length will be counted by
 /// the byte number of UTF8-encoded string.
 pub const Y_OFFSET_BYTES: u8 = 0;
@@ -4362,8 +4365,8 @@ pub unsafe extern "C" fn yundo_manager_undo(mgr: *mut UndoManager) -> u8 {
     // TODO [LSViana] Check whether the value inside Ok() should be used as result.
     // Currently, if no changes are applied, the result is Ok(false) which still returns true.
     match mgr.undo() {
-        Ok(_) => Y_TRUE,
-        Err(_) => Y_FALSE,
+        Ok(result) => if result { Y_TRUE } else { Y_FALSE },
+        Err(_) => Y_ERROR,
     }
 }
 
@@ -4371,8 +4374,8 @@ pub unsafe extern "C" fn yundo_manager_undo(mgr: *mut UndoManager) -> u8 {
 pub unsafe extern "C" fn yundo_manager_redo(mgr: *mut UndoManager) -> u8 {
     let mgr = mgr.as_mut().unwrap();
     match mgr.redo() {
-        Ok(_) => Y_TRUE,
-        Err(_) => Y_FALSE,
+        Ok(result) => if result { Y_TRUE } else { Y_FALSE },
+        Err(_) => Y_ERROR,
     }
 }
 
